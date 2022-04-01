@@ -1,14 +1,7 @@
 from wsgiref.simple_server import make_server
 
-from typing import Callable
 
-HOST = "localhost"
-PORT = 8080
-SCHEMA = "http"
-
-
-class ReverseWare:
-
+class Reverseware:
     def __init__(self, app):
         self.wrapped_app = app
 
@@ -18,17 +11,21 @@ class ReverseWare:
 
 
 def application(environ, start_response):
-    response_body = "\n".join([f"{key}:{value}" for key, value in sorted(environ.items())])
+    response_body = [
+        f'{key}: {value}' for key, value in sorted(environ.items())
+    ]
+    response_body = '\n'.join(response_body)
 
-    status = "200 OK"
+    status = '200 OK'
 
-    response_headers = [("Content-type", "text/plain")]
+    response_headers = [
+        ('Content-type', 'text/plain'),
+    ]
 
     start_response(status, response_headers)
 
-    return [response_body.encode("utf-8")]
+    return [response_body.encode('utf-8')]
 
 
-server = make_server("localhost", 8080, app=ReverseWare(application))
-print(f"Serving on {SCHEMA}://{HOST}:{PORT}")
-server.serve_forever() 
+server = make_server('localhost', 8000, app=Reverseware(application))
+server.serve_forever()

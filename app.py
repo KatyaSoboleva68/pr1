@@ -1,28 +1,35 @@
-from webob import Request, Response
+from api import API
 
-from study_wsgi.api import API
-from study_wsgi.base.base_view import BaseView
 
 app = API()
 
 
 @app.route("/home")
-def home(request: Request, response: Response):
-    response.text = "Hello from home page!"
+def home(request, response):
+    response.text = "Hello from the HOME page"
 
-@app.route("/players")
-class PlayerView:
-    def get(self, request: Request, response: Response, **kwargs):
-        pass
 
 @app.route("/about")
-def about(request: Request, response: Response):
-    response.text = "Hello from about page!"
+def about(request, response):
+    response.text = "Hello from the ABOUT page"
 
+@app.route("/hello/{name}")
+def greeting(request, response, name):
+    response.text = f"Hello, {name}"
 
-@app.route("/hello/{name:l}")
-def hello(request: Request, response: Response, name):
-    response.text = f"Hello, {name}!" 
-@app.route("/home")
-def home(request: Request, response: Response):
-    response.text = "Hello from home page!"
+@app.route("/tell/{age:d}" )
+def telling(request, response, age):
+    response.text = f"I tell your age: {age}"
+
+@app.route("/sum/{num_1:d}/{num_2:d}")
+def sum(request, response, num_1, num_2):
+    total = int(num_1) + int(num_2)
+    response.text = f"{num_1} + {num_2} = {total}"
+
+@app.route("/book")
+class BooksResource:
+    def get(self, req, resp):
+        resp.text = "Books Page"
+
+    def post(self, req, resp):
+        resp.text = "Endpoint to create a book"
